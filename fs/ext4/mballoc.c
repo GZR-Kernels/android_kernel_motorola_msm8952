@@ -2516,7 +2516,7 @@ int ext4_mb_init(struct super_block *sb)
 {
 	struct ext4_sb_info *sbi = EXT4_SB(sb);
 	unsigned i, j;
-	unsigned offset, offset_incr;
+	unsigned offset;
 	unsigned max;
 	int ret;
 
@@ -2545,13 +2545,11 @@ int ext4_mb_init(struct super_block *sb)
 
 	i = 1;
 	offset = 0;
-	offset_incr = 1 << (sb->s_blocksize_bits - 1);
 	max = sb->s_blocksize << 2;
 	do {
 		sbi->s_mb_offsets[i] = offset;
 		sbi->s_mb_maxs[i] = max;
-		offset += offset_incr;
-		offset_incr = offset_incr >> 1;
+		offset += 1 << (sb->s_blocksize_bits - i);
 		max = max >> 1;
 		i++;
 	} while (i <= sb->s_blocksize_bits + 1);
